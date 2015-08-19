@@ -1,0 +1,5 @@
+= zio
+
+Generate this with
+    zio rdoc
+After you have described your command line interface

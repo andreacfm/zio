@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+require 'gli'
+begin # XXX: Remove this begin/rescue before distributing your app
+  require 'zio'
+  rescue LoadError
+    STDERR.puts 'In development, you need to use `bundle exec bin/zio` to run your app'
+    STDERR.puts 'At install-time, RubyGems will make sure lib, etc. are in the load path'
+    STDERR.puts 'Feel free to remove this message from bin/zio now'
+    exit 64
+end
+
+include GLI::App
+
+program_desc 'Describe your application here'
+
+version Zio::VERSION
+
+subcommand_option_handling :normal
+arguments :strict
+
+# desc 'Describe some switch here'
+# switch [:s,:switch]
+#
+# desc 'Describe some flag here'
+# default_value 'the default'
+# arg_name 'The name of the argument'
+# flag [:f,:flagname]
+
+desc 'Run git pull --rebase on git repos'
+command :up do |c|
+  c.desc 'Dir path'
+  c.default_value '~/'
+  c.flag :d
+  c.action do |_global_options, options, _args|
+    Dir.foreach(options[:d]) do |path|
+      next if path == '.' || path == '..'
+      ab_path = File.expand_path(path, options[:d])
+      next unless File.directory?(ab_path)
+      puts ab_path
+      system "cd #{ab_path} && git status"
+      puts "****"
+    end
+  end
+end
+
+desc 'Describe checkout here'
+arg_name 'Describe arguments to checkout here'
+command :checkout do |c|
+  c.action do |_global_options, _options, _args|
+    puts 'checkout command ran'
+  end
+end
+
+pre do |_global, _command, _options, _args|
+  # Pre logic here
+  # Return true to proceed; false to abort and not call the
+  # chosen command
+  # Use skips_pre before a command to skip this block
+  # on that command only
+  true
+end
+
+post do |_global, _command, _options, _args|
+  # Post logic here
+  # Use skips_post before a command to skip this
+  # block on that command only
+end
+
+on_error do |_exception|
+  # Error logic here
+  # return false to skip default error handling
+  true
+end
+
+exit run(ARGV)
