@@ -1,6 +1,6 @@
 # Ensure we require the local version and not one we might have installed already
 require File.join([File.dirname(__FILE__),'lib','zio','version.rb'])
-spec = Gem::Specification.new do |s| 
+spec = Gem::Specification.new do |s|
   s.name = 'zio'
   s.version = Zio::VERSION
   s.author = 'Your Name Here'
@@ -20,4 +20,6 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency('rdoc')
   s.add_development_dependency('aruba')
   s.add_runtime_dependency('gli','2.13.1')
+  s.add_runtime_dependency('celluloid')
+  s.add_runtime_dependency('git-smart')
 end
