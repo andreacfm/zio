@@ -21,5 +21,5 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency('aruba')
   s.add_runtime_dependency('gli','2.13.1')
   s.add_runtime_dependency('celluloid')
-  s.add_runtime_dependency('git-smart')
+  s.add_runtime_dependency('rainbow')
 end
