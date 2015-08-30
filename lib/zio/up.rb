@@ -59,10 +59,6 @@ module Zio
     def up
       publish 'up_paths', _paths
       _paths.each do |path|
-        #Celluloid::Future.new { _pull(path) }
-        # future.value
-        #self.class.pool(size: 8, args: dir).future._pull(path)
-        # pull(path)
         self.class.new(dir).async.pull(path)
       end
     end
