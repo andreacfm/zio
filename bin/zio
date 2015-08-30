@@ -36,8 +36,7 @@ command :up do |c|
 
   c.action do |_global_options, options, _args|
      logger = Zio::UpLogger.new
-     zio = Zio::Up.new(options[:d])
-     zio.up
+     Zio::Up.new(options[:d]).up
      logger.print
   end
 
