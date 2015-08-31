@@ -37,9 +37,13 @@ command :up do |c|
   c.desc 'Dirs set'
   c.flag :s
 
+  dirsets = YAML.load_file(File.join(ENV['HOME'],'.zio.rc.yml'))[:dirsets]
+
   c.action do |_global_options, options, _args|
      logger = Zio::UpLogger.new
-     Zio::Up.new(options[:d]).up
+     opts = { dir: options[:d] }
+     opts[:set] = dirsets[options[:s]] if options[:s]
+     Zio::Up.new(opts).up
      logger.print
   end
 

@@ -46,20 +46,21 @@ module Zio
   end
 
   class Up
-    attr_accessor :dir
+    attr_accessor :options
     include Celluloid
     include Celluloid::Notifications
 
     # Celluloid.logger = nil
 
-    def initialize(dir)
-      @dir = dir
+    def initialize(options={})
+      @options = options
+      raise MISSING_ARGUMENTS unless options[:dir] || options[:set]
     end
 
     def up
       publish 'up_paths', _paths
       _paths.each do |path|
-        self.class.new(dir).async.pull(path)
+        self.class.new(options).async.pull(path)
       end
     end
 
@@ -69,10 +70,11 @@ module Zio
     end
 
     def _paths
+      return options[:set] unless options[:set].nil?
       @_paths ||= begin
-        Dir.foreach(dir).map do |path|
-          next if path == '.' || path == '..' || !File.exists?(File.expand_path(path, dir) + '/.git')
-          ab_path = File.expand_path(path, dir)
+        Dir.foreach(options[:dir]).map do |path|
+          next if path == '.' || path == '..' || !File.exists?(File.expand_path(path, options[:dir]) + '/.git')
+          ab_path = File.expand_path(path, options[:dir])
           File.directory?(ab_path) ? ab_path : nil
         end.compact
       end
