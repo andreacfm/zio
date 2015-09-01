@@ -11,11 +11,14 @@ module Zio
     def checkout
       _paths.each do |path|
         #self.class.new(options).async.pull(path)
-        stdout, stderr, status = Open3.capture3("cd #{path} && git stash && git rev-parse --verify master")
+        puts path
+        stdout, stderr, status = Open3.capture3("cd #{path} && git stash && git rev-parse --verify #{options[:branch]}")
 
         # Branch does not exists
-        if status.exitstatus != 0
-          stdout, stderr, status = Open3.capture3("cd #{path} && git checkout #{options[:base_branch]} && git checkout -b #{options[:branch]}")
+        if status.exitstatus != 0 && options[:force]
+          stdout, stderr, status = Open3.capture3(
+              "cd #{path} && git checkout #{options[:base_branch]} && git checkout -b #{options[:branch]}"
+          )
         else
           stdout, stderr, status = Open3.capture3("cd #{path} && git checkout #{options[:branch]}")
         end

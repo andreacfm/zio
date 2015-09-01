@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'gli'
 require 'zio/up'
+require 'zio/branch'
 
 begin # XXX: Remove this begin/rescue before distributing your app
   require 'zio'
