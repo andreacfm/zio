@@ -13,47 +13,51 @@ end
 
 include GLI::App
 
-program_desc 'Describe your application here'
+program_desc 'Bella zio! Productivity tools'
 
 version Zio::VERSION
 
 subcommand_option_handling :normal
 arguments :strict
 
-# desc 'Describe some switch here'
-# switch [:s,:switch]
-#
-# desc 'Describe some flag here'
-# default_value 'the default'
-# arg_name 'The name of the argument'
-# flag [:f,:flagname]
-
-desc 'Run stash and git pull --rebase on git repos'
+desc 'Stash and pull --rebase on master'
 command :up do |c|
-  c.desc 'Dir path'
-  c.default_value File.expand_path('~/')
-  c.flag :d
+  c.desc 'Parent directory to scan. Apply to any contained git repo'
+  c.flag [:d, :directory]
 
-  c.desc 'Dirs set'
-  c.flag :s
-
-  dirsets = YAML.load_file(File.join(ENV['HOME'],'.zio.rc.yml'))[:dirsets]
+  c.desc 'Git repos set'
+  c.flag [:s, :repos_set]
 
   c.action do |_global_options, options, _args|
-     logger = Zio::UpLogger.new
-     opts = { dir: options[:d] }
-     opts[:set] = dirsets[options[:s]] if options[:s]
-     Zio::Up.new(opts).up
-     logger.print
+    logger = Zio::UpLogger.new
+    opts = { dir: options[:d] }
+    opts[:set] = $dirsets[options[:s]] if options[:s]
+    Zio::Up.new(opts).up
+    logger.print
   end
-
 end
 
-desc 'Describe checkout here'
-arg_name 'Describe arguments to checkout here'
-command :checkout do |c|
-  c.action do |_global_options, _options, _args|
-    puts 'checkout command ran'
+desc 'Branch checkout'
+arg_name 'branch_name'
+command :branch do |c|
+  c.desc 'Parent directory to scan. Apply to any contained git repo'
+  c.flag [:d, :directory]
+
+  c.desc 'Git repos set'
+  c.flag [:s, :repos_set]
+
+  c.desc 'Create the branch if does not exists'
+  c.switch [:f, :force]
+
+  c.desc 'If -f the base branch to checkout from'
+  c.default_value 'master'
+  c.flag [:b, :base_branch]
+
+  c.action do |_global_options, options, args|
+    branch = args[0] || 'master'
+    opts = { dir: options[:d], branch: branch, force: options[:f], base_branch: options[:b] }
+    opts[:set] = $dirsets[options[:s]] if options[:s]
+    Zio::Branch.new(opts).checkout
   end
 end
 
@@ -63,6 +67,7 @@ pre do |_global, _command, _options, _args|
   # chosen command
   # Use skips_pre before a command to skip this block
   # on that command only
+  $dirsets = YAML.load_file(File.join(ENV['HOME'], '.zio.rc.yml'))[:dirsets]
   true
 end
 
