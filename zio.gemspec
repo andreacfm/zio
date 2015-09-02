@@ -8,8 +8,7 @@ spec = Gem::Specification.new do |s|
   s.homepage = 'http://your.website.com'
   s.platform = Gem::Platform::RUBY
   s.summary = 'A description of your project'
-  s.files = `git ls-files`.split("
-")
+  s.files = `git ls-files`.split("")
   s.require_paths << 'lib'
   s.has_rdoc = true
   s.extra_rdoc_files = ['README.rdoc','zio.rdoc']
@@ -20,6 +19,6 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency('rdoc')
   s.add_development_dependency('aruba')
   s.add_runtime_dependency('gli','2.13.1')
-  s.add_runtime_dependency('celluloid')
+  s.add_runtime_dependency('celluloid', '0.17.1.2')
   s.add_runtime_dependency('rainbow')
 end
