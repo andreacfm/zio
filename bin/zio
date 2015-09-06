@@ -64,7 +64,7 @@ end
 
 desc 'Rebase on muliple projects'
 arg_name 'branch_name'
-command :branch do |c|
+command :rebase do |c|
   c.desc 'Parent directory to scan. Apply to any contained git repo'
   c.flag [:d, :directory]
 
