@@ -31,7 +31,6 @@ module Zio
         end
         data = out.shift
         path, stdout, stderr, status = *data
-        dirname = path.split('/').last
         puts sprintf("\nProcessing - #{dirname}").color(:green)
         puts sprintf('---------------------------').color(:green)
         if status.exitstatus == 0
