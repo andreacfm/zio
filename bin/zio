@@ -62,6 +62,30 @@ command :branch do |c|
   end
 end
 
+desc 'Rebase on muliple projects'
+arg_name 'branch_name'
+command :branch do |c|
+  c.desc 'Parent directory to scan. Apply to any contained git repo'
+  c.flag [:d, :directory]
+
+  c.desc 'Git repos set'
+  c.flag [:s, :repos_set]
+
+  c.desc 'Rebase with --interactive'
+  c.switch [:i, :interactive]
+
+  c.desc 'Branch to rebase from'
+  c.default_value 'master'
+  c.flag [:b, :base_branch]
+
+  c.action do |_global_options, options, args|
+    branch = args[0] || raise('What branch must be rebased!')
+    opts = { dir: options[:d], branch: branch, force: options[:i], base_branch: options[:b] }
+    opts[:set] = $dirsets[options[:s]] if options[:s]
+    Zio::Rebase.new(opts).checkout
+  end
+end
+
 pre do |_global, _command, _options, _args|
   # Pre logic here
   # Return true to proceed; false to abort and not call the
