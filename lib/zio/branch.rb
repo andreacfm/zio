@@ -16,9 +16,9 @@ module Zio
 
         # Branch does not exists
         if status.exitstatus != 0
-          puts("Branch #{branch} does not exists yet!").color(:blue)
+          puts "Branch #{options[:branch]} does not exists yet!".color(:blue)
           if options[:force]
-            puts("Creating new branch - #{branch}").color(:blue)
+            puts "Creating new branch - #{options[:branch]}".color(:blue)
             stdout, stderr, status = Open3.capture3(
               "cd #{path} && git checkout #{options[:base_branch]} && git checkout -b #{options[:branch]}"
             )
