@@ -31,10 +31,10 @@ module Zio
         end
         data = out.shift
         path, stdout, stderr, status = *data
-        puts sprintf("\nProcessing - #{dirname}").color(:green)
+        puts sprintf("\nProcessing - #{path}").color(:green)
         puts sprintf('---------------------------').color(:green)
         if status.exitstatus == 0
-          puts sprintf('[%s] - %s', dirname, stdout).color(:blue)
+          puts sprintf('[%s] - %s', path, stdout).color(:blue)
         else
           STDERR.puts stderr.color(:red)
         end
