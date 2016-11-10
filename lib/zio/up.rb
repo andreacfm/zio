@@ -59,6 +59,7 @@ module Zio
     def up
       publish 'up_paths', _paths
       _paths.each do |path|
+        sleep 0.2 if options[:slow]
         self.class.new(options).async.pull(path)
       end
     end

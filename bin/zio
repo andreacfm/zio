@@ -29,9 +29,12 @@ command :up do |c|
   c.desc 'Git repos set'
   c.flag [:s, :repos_set]
 
+  c.desc 'Slow down!'
+  c.switch [:l, :slow]
+
   c.action do |_global_options, options, _args|
     logger = Zio::UpLogger.new
-    opts = { dir: options[:d] }
+    opts = { dir: options[:d], slow: options[:l] }
     opts[:set] = $dirsets[options[:s]] if options[:s]
     Zio::Up.new(opts).up
     logger.print
